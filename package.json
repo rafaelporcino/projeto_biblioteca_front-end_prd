@@ -1,0 +1,15 @@
+{
+  "name": "projeto_biblioteca_back_end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+     "start": "node appTest.js"    
+  },
+  "keywords": [],
+  "author": "Rafael Porcino - Ricardo",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.8.0"
+  }
+}
