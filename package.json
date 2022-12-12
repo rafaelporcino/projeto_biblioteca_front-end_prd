@@ -1,15 +1,24 @@
 {
-  "name": "projeto_biblioteca_back_end",
+  "name": "projeto_biblioteca_front-end_prd",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
-     "start": "node appTest.js"    
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "Rafael Porcino - Ricardo",
   "license": "ISC",
   "dependencies": {
+    "expres": "^0.0.5",
     "pg": "^8.8.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafaelporcino/projeto_biblioteca_front-end_prd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rafaelporcino/projeto_biblioteca_front-end_prd/issues"
+  },
+  "homepage": "https://github.com/rafaelporcino/projeto_biblioteca_front-end_prd#readme",
+  "description": ""
 }

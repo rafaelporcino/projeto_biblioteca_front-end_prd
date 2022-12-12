@@ -1,101 +1,92 @@
-const emprestimoNegocio = require('./negocio/emprestimo_negocio')
+const express = require('express');
+const produtoNegocio = require('./negocio/produto_negocio')
+const app = express();
 
-async function main() {
-      
-    const listaEmprestimo = await emprestimoNegocio.listar();
-    console.log("Lista de Emprestimos",listaEmprestimo);
- 
-    try{ 
-        const emprestimo_1 = await emprestimoNegocio.buscarPorId(1);
-        console.log("Emprestimo 1", emprestimo_1);
-    } catch (err) {                                                                           
-        console.log("Erro", err);
-    }
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
-    try{ 
-        const emprestimo_2 = await emprestimoNegocio.buscarPorId(2);
-        console.log("Empretimo 2 = ", emprestimo_2);
-    } catch (err) {
-        console.log("Erro", err);
-    }
-
-    //Inesistente  
+app.get("/produtos", async (req, res) => {
     try{
-        const emprestimo_3 = await emprestimoNegocio.buscarPorNome('PEQUENO PRINCIPE');
-        console.log("Emprestimo 3 = 'PEQUENO'", emprestimo_3);
-    } catch(err) {
-        console.log("Erro", err);
+        const listaProdutos = await produtoNegocio.listar();
+        res.json(listaProdutos);
+    } catch(err){ 
+        res.status(500).json({Erro:"Erro na Aplicacao"});
     }
+
+})
+
+app.get("/produtos/:id", async (req, res) => {
+    const id = req.params.id;
 
     try{
-        const emprestimo_4 = await emprestimoNegocio.buscarPorNome('DOM CASMURRO');
-        console.log("Emprestimo 4 = ", emprestimo_4);
-    } catch(err) {
-        console.log("Erro", err);
+        const produto = await produtoNegocio.buscarPorId(id);
+        res.json(produto);
+    }
+    catch(err){
+        if(err && err.id) {
+            res.status(err.id).json({Erro: err.mensagem})
+        }
+        else {
+            res.status(500).json({Erro:"Erro na Aplicacao"});
+        }
     }
 
-   
-   
-    //Caso de sucesso
-    try {
-        const emprestimoInserido_11 = await emprestimoNegocio.inserir({id_usuario: 1,id_livro: 1,id_situacao: 1,dt_retirada: '20/11/2022',dt_devolucao_prevista: '22/11/2022'})
-        console.log("Emprestimo Inserido", emprestimoInserido_11);
-        } catch (err){
+    
+})
+
+app.post("/produtos",async (req, res) => {
+    const produto = req.body;
+
+    try{
+        const produtoInserido = await produtoNegocio.inserir(produto);
+        res.status(201).json(produtoInserido);
+    }
+    catch(err){
+        if(err && err.id) {
+            res.status(err.id).json({Erro: err.mensagem})
+        }
+        else {
+            res.status(500).json({Erro:"Erro na Aplicacao"});
+        }        
+    }
+
+})
+
+app.put("/produtos/:id", async (req, res) => {
+    const id = req.params.id;
+    let produto = req.body;
+
+    try{
+        const produtoAtualizado = await produtoNegocio.atualizar(id, produto);
+        res.json(produtoAtualizado);
+    }
+    catch(err){
+        if(err && err.id) {
+            res.status(err.id).json({Erro: err.mensagem})
+        }
+        else {
             console.log(err);
-        } 
-    
-        try {
-        const emprestimoInserido_12 = await emprestimoNegocio.inserir({id_usuario: 1,id_livro: 2,id_situacao: 2,dt_retirada: '21/11/2022',dt_devolucao_prevista: '23/11/2022'})
-        console.log("Emprestimo Inserido", emprestimoInserido_12);
-        } catch (err){
-            console.log(err);
-        } 
-    
-    //Caso de sucesso
+            res.status(500).json({Erro:"Erro na Aplicacao"});
+        }        
+    }
+})
+
+app.delete("/produtos/:id", async (req, res) => {
+    const id = req.params.id;
     try{
-        const emprestimoAtualizado = await emprestimoNegocio.atualizar(2, { id_situacao: '2', dt_entrega: '25/12/2022 00:00:01'});
-        console.log("Emprestimo Atualizado", emprestimoAtualizado);
+        const produtoDeletado = await produtoNegocio.deletar(id);
+        res.json(produtoDeletado);
     }
     catch(err){
-        console.log("Erro", err);
+        if(err && err.id) {
+            res.status(err.id).json({Erro: err.mensagem})
+        }
+        else {
+            res.status(500).json({Erro:"Erro na Aplicacao"});
+        }        
     }
+})
 
-    //Caso de insucesso: Parametro preco é string
-    try{
-        const emprestimoAtualizado = await emprestimoNegocio.atualizar(3, { id_situacao: 2 , dt_entrega: '25/12/2022 00:00:00'});
-        console.log("Emprestimo Atualizado", emprestimoAtualizado);
-    }
-    catch(err){
-        console.log("Erro", err);
-    }
-
-    //Caso de insucesso: Id inexistente
-    try{
-        const EmprestimoAtualizado = await emprestimoNegocio.atualizar(100, { nome: 'Emprestimo4'});
-        console.log("Emprestimo atualizado", EmprestimoAtualizado);
-    }
-    catch(err){
-        console.log("Erro", err);
-    }
-
-    //Caso de sucesso
-    try{
-        //Trazer id válido
-        const EmprestimoDeletado = await emprestimoNegocio.deletar(16);
-        console.log("Emprestimo deletado", EmprestimoDeletado);
-    } catch(err){
-        console.log("Erro", err);
-    }
-    
-    //Caso de insucesso: Id inexistente
-    try{
-        //Trazer id inválido
-        const EmprestimoDeletado = await emprestimoNegocio.deletar(100);
-        console.log("Emprestimo deletado", EmprestimoDeletado);
-    } catch(err){
-        console.log("Erro", err);
-    }
-}
-
-main();
-
+app.listen(3000, () => {
+    console.log ("Servidor iniciado na porta 3000");
+})
