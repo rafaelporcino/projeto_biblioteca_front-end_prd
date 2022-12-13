@@ -1,5 +1,5 @@
 {
-  "name": "projeto_biblioteca_front-end_prd",
+  "name": "app-express",
   "version": "1.0.0",
   "main": "app_autor.js",
   "scripts": {
