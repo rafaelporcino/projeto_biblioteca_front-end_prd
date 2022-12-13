@@ -1,9 +1,9 @@
 {
   "name": "projeto_biblioteca_front-end_prd",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "app_autor.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app_autor.js"
   },
   "keywords": [],
   "author": "Rafael Porcino - Ricardo",
